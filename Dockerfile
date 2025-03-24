@@ -21,13 +21,11 @@ RUN yarn build:$APP_NAME
 FROM node:23-alpine AS runner
 
 WORKDIR /app
-RUN mkdir -p /app/uploads 
 
 # Copy chỉ các file cần thiết từ builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/yarn.lock ./yarn.lock
-COPY --from=builder /app/uploads /app/uploads 
 
 # Cài đặt dependencies chỉ cần cho production
 RUN yarn install --production --frozen-lockfile --ignore-optional
@@ -37,7 +35,7 @@ RUN rm -rf node_modules/rxjs/{src,bundles,_esm5,_esm2015} \
     && rm -rf node_modules/swagger-ui-dist/*.map \
     && rm -rf node_modules/couchbase/src/
 
-# Public thư mục uploads để lưu ảnh (KHÔNG dùng VOLUME ở đây)
+# 🛠 Đảm bảo thư mục uploads tồn tại
 RUN mkdir -p /app/uploads
 
 # Mở cổng cho service
