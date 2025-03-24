@@ -18,21 +18,18 @@ export class UploadController {
         return { success: false, message: 'Invalid image format' };
       }
 
-      const extension = 'png'; // Lấy phần mở rộng từ base64 (png, jpg, jpeg,...)
+      const extension = matches[1]; // Lấy đúng extension từ base64 (png, jpg,...)
       const buffer = Buffer.from(matches[2], 'base64');
 
-      // Chuẩn hóa title thành tên file an toàn
-      const sanitizedTitle = title.replace(/[^a-zA-Z0-9-_]/g, '_');
-      const fileName = `${sanitizedTitle}.${extension}`;
+      // **Lưu vào thư mục uploads ngoài cùng, tránh dist/**
+      const uploadDir = path.join(__dirname, '..', '..', '..', 'uploads');
+      const fileName = `${title}.${extension}`;
+      const filePath = path.join(uploadDir, fileName);
 
-      // **Tạo thư mục upload**
-      const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+      // **Tạo thư mục nếu chưa tồn tại**
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
-
-      // **Đường dẫn file**
-      const filePath = path.join(uploadDir, fileName);
 
       // **Ghi file ảnh**
       fs.writeFileSync(filePath, buffer);

@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/uploads /app/uploads 
 
 # Cài đặt dependencies chỉ cần cho production
 RUN yarn install --production --frozen-lockfile --ignore-optional
@@ -35,12 +36,11 @@ RUN rm -rf node_modules/rxjs/{src,bundles,_esm5,_esm2015} \
     && rm -rf node_modules/swagger-ui-dist/*.map \
     && rm -rf node_modules/couchbase/src/
 
-# Public thư mục uploads để lưu ảnh
+# Public thư mục uploads để lưu ảnh (KHÔNG dùng VOLUME ở đây)
 RUN mkdir -p /app/uploads
-VOLUME [ "/app/uploads" ]
 
 # Mở cổng cho service
-EXPOSE 3000
+EXPOSE 30001
 
 # Lệnh chạy ứng dụng
 CMD ["yarn", "start:prod"]
