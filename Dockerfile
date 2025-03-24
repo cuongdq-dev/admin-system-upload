@@ -21,6 +21,7 @@ RUN yarn build:$APP_NAME
 FROM node:23-alpine AS runner
 
 WORKDIR /app
+RUN mkdir -p /app/uploads 
 
 # Copy chỉ các file cần thiết từ builder stage
 COPY --from=builder /app/dist ./dist
