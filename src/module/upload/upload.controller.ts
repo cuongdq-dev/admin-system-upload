@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Delete } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -7,6 +7,7 @@ export class UploadController {
   @Post()
   async uploadImage(@Body() body: { image: string; title: string }) {
     const { image, title } = body;
+    console.log(image, title);
     if (!image || !title) {
       return { success: false, message: 'Missing image or title' };
     }
@@ -38,6 +39,31 @@ export class UploadController {
     } catch (error) {
       console.error('Upload error:', error);
       return { success: false, message: 'Upload failed' };
+    }
+  }
+
+  @Delete()
+  async deleteImage(@Body() body: { filename: string }) {
+    const { filename } = body;
+    if (!filename) {
+      return { success: false, message: 'Missing filename' };
+    }
+
+    try {
+      const uploadDir = path.join(__dirname, '..', '..', '..', 'uploads');
+      const filePath = path.join(uploadDir, filename);
+
+      // Kiểm tra file tồn tại
+      if (!fs.existsSync(filePath)) {
+        return { success: false, message: 'File not found' };
+      }
+
+      // Xóa file
+      fs.unlinkSync(filePath);
+      return { success: true, message: 'File deleted successfully' };
+    } catch (error) {
+      console.error('Delete error:', error);
+      return { success: false, message: 'Delete failed' };
     }
   }
 }
