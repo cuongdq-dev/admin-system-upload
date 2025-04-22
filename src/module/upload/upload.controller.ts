@@ -7,7 +7,6 @@ export class UploadController {
   @Post()
   async uploadImage(@Body() body: { image: string; title: string }) {
     const { image, title } = body;
-    console.log(image, title);
     if (!image || !title) {
       return { success: false, message: 'Missing image or title' };
     }
@@ -45,6 +44,7 @@ export class UploadController {
   @Delete()
   async deleteImage(@Body() body: { filename: string }) {
     const { filename } = body;
+    console.log(filename);
     if (!filename) {
       return { success: false, message: 'Missing filename' };
     }
