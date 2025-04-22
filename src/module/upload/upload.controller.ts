@@ -55,7 +55,7 @@ export class UploadController {
 
       // Kiểm tra file tồn tại
       if (!fs.existsSync(filePath)) {
-        return { success: false, message: 'File not found' };
+        return { success: true, message: 'File not found' };
       }
 
       // Xóa file
